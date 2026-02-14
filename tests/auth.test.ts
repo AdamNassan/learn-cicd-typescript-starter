@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { getAPIKey } from "../api/auth";
+import { getAPIKey } from "../src/api/auth";
 
 describe("getAPIKey function", () => {
   test("should return a string", () => {
