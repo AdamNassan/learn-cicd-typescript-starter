@@ -29,14 +29,16 @@ jobs:
         with:
           version: 'latest'
           project_id: notely-487519
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          
+      
+      - name: Write GCP service account key
+        run: echo "${{ secrets.GCP_CREDENTIALS }}" > /tmp/gcp-key.json
+      
       - name: Activate service account
-        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
-        
-      - name: Set active project
-        run: gcloud config set project notely-487519
-
+        run: gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+      
+      - name: Configure Docker to use GCP
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+      
       - name: Build & Push Docker Image
         run: |
           gcloud builds submit \
