@@ -31,8 +31,8 @@ jobs:
           project_id: notely-487519
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           
-      - name: Authenticate Docker to GCP
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+      - name: Activate service account
+        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
         
       - name: Set active project
         run: gcloud config set project notely-487519
