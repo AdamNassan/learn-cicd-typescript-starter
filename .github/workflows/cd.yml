@@ -23,12 +23,16 @@ jobs:
 
       - name: Build app
         run: npm run build
-        
+
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          version: 'latest'
           project_id: notely-487519
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set active project
+        run: gcloud config set project notely-487519
 
       - name: Build & Push Docker Image
         run: |
