@@ -24,15 +24,23 @@ jobs:
       - name: Build app
         run: npm run build
 
-      # Setup gcloud and authenticate using the secret directly
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
+          version: 'latest'
           project_id: notely-487519
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          export_default_credentials: true  # <-- makes gcloud and docker auth automatic
 
-      # Build & push Docker image to Artifact Registry
+      # Fix: preserve JSON formatting properly
+      - name: Write GCP service account key
+        run: |
+          printf '%s' "${{ secrets.GCP_CREDENTIALS }}" > /tmp/gcp-key.json
+
+      - name: Activate service account
+        run: gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+
+      - name: Configure Docker to use GCP
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
       - name: Build & Push Docker Image
         run: |
           gcloud builds submit \
